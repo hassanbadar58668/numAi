@@ -56,24 +56,41 @@ public class ApiService {
                             messageJson.put("content", (String) null);
                         } else {
                             List<String> inputImages = message.getInputImages();
-                            if (inputImages == null || inputImages.isEmpty()) {
-                                messageJson.put("content", message.getContent());
-                            } else {
+                            String fileContent = message.getFileContent();
+                            
+                            if ((inputImages != null && !inputImages.isEmpty()) || (fileContent != null && fileContent.length() > 0)) {
                                 hasImg = true;
                                 JSONArray content = new JSONArray();
+                                
+                                // 1. النص الأساسي
                                 JSONObject inputText = new JSONObject();
                                 inputText.put("type", "text");
                                 inputText.put("text", message.getContent());
                                 content.add(inputText);
-                                for (String image: inputImages) {
-                                    JSONObject input = new JSONObject();
-                                    input.put("type", "image_url");
-                                    JSONObject imageUrl = new JSONObject();
-                                    imageUrl.put("url", image);
-                                    input.put("image_url", imageUrl);
-                                    content.add(input);
+                                
+                                // 2. الصور المرفقة
+                                if (inputImages != null && !inputImages.isEmpty()) {
+                                    for (String image: inputImages) {
+                                        JSONObject input = new JSONObject();
+                                        input.put("type", "image_url");
+                                        JSONObject imageUrl = new JSONObject();
+                                        imageUrl.put("url", image);
+                                        input.put("image_url", imageUrl);
+                                        content.add(input);
+                                    }
                                 }
+                                
+                                // 3. محتوى الملف النصي المرفق (جديد)
+                                if (fileContent != null && fileContent.length() > 0) {
+                                    JSONObject fileInput = new JSONObject();
+                                    fileInput.put("type", "text");
+                                    fileInput.put("text", "\n\n--- بداية الملف المرفق ---\n" + fileContent + "\n--- نهاية الملف المرفق ---\n");
+                                    content.add(fileInput);
+                                }
+                                
                                 messageJson.put("content", content);
+                            } else {
+                                messageJson.put("content", message.getContent());
                             }
                         }
                         messages.add(messageJson);

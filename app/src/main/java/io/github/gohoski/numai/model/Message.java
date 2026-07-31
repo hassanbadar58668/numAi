@@ -12,6 +12,7 @@ public class Message {
     private String llm;
     private List<String> inputImages;
     private boolean isError = false;
+    private String fileContent; // محتوى الملف النصي المرفق
     private JSONArray toolCalls;
     private String toolCallId;
     private int searchResultCount = -1;
@@ -92,6 +93,16 @@ public class Message {
         isError = true;
     }
 
+    // ===== الدوال الجديدة لملف Markdown =====
+    public String getFileContent() {
+        return fileContent;
+    }
+
+    public void setFileContent(String fileContent) {
+        this.fileContent = fileContent;
+    }
+    // ======================================
+
     public JSONObject toJSONObject() {
         JSONObject json = new JSONObject();
         json.put("role", role.toString());
@@ -103,6 +114,10 @@ public class Message {
                 imgArr.add(inputImages.get(i));
             }
             json.put("inputImages", imgArr);
+        }
+        // حفظ محتوى الملف النصي
+        if (fileContent != null && fileContent.length() > 0) {
+            json.put("fileContent", fileContent);
         }
         if (toolCalls != null) json.put("toolCalls", toolCalls);
         if (toolCallId != null) json.put("toolCallId", toolCallId);
@@ -137,7 +152,12 @@ public class Message {
             }
         }
 
+        // قراءة محتوى الملف النصي
+        String fileContent = json.getNullableString("fileContent");
+
         Message message = new Message(role, content, inputImages, llm);
+        message.setFileContent(fileContent);
+
         if (json.has("toolCalls")) {
             message.setToolCalls(json.getArray("toolCalls"));
         }

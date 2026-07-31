@@ -126,6 +126,14 @@ public class MainActivity extends Activity {
         });
 
         attachBtn.setOnClickListener(new OnClickListener() {
+    public void onClick(View view) {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("*/*");
+        intent.putExtra(Intent.EXTRA_MIME_TYPES, new String[]{"image/*", "text/plain"});
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        startActivityForResult(Intent.createChooser(intent, "اختر صورة أو ملف Markdown"), REQUEST_CODE_PICK_IMAGE);
+    }
+});attachBtn.setOnClickListener(new OnClickListener() {
             public void onClick(View view) {
                 Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
                 intent.setType("image/*");
