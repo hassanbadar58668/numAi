@@ -24,10 +24,10 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build APK
-        run: ./gradlew assembleRelease
+        run: ./gradlew build
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: numAi-release
-          path: app/build/outputs/apk/release/*.apk
+          name: numAi-debug
+          path: app/build/outputs/apk/debug/*.apk
