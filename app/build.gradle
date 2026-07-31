@@ -6,17 +6,15 @@ android {
     defaultConfig {
         applicationId "io.github.gohoski.numai"
         minSdkVersion 1
-        //noinspection OldTargetApi
         targetSdkVersion 25
         versionCode 3
         versionName "1.0.0dev"
-        setProperty("archivesBaseName", "numAi-$versionName") //e.g. numAi-0.1.0-release.apk
+        setProperty("archivesBaseName", "numAi-$versionName")
     }
     buildTypes {
         release {
-            //Optimizations totally work down to API 1 and result in smaller file size.
-            shrinkResources true //reduces apk size removing unused code
-            minifyEnabled true //increase performance optimizing dex files (obfuscation)
+            shrinkResources true
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
